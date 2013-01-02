@@ -38,7 +38,7 @@ setup(
     install_requires=REQUIREMENTS,
     entry_points={
         'console_scripts': [
-            'fktb = fktb.interface.gui.module:main',
+            'fktb = fktb.interface.gui:main',
             #'fktb-cli = fktb.cli:main'
         ]
     },
