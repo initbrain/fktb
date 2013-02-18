@@ -1,0 +1,695 @@
+{
+    "Cryptographie":
+        [
+            {
+                "name": "Calcul d'empreintes",
+                "dependency":
+                    [
+                        {
+                            "name": "hashlib",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            },
+            {
+                "name": "Chiffre de César",
+                "dependency":
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            },
+            {
+                "name": "Chiffre de Vigenère",
+                "dependency":
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            },
+            {
+                "name": "Chiffrement XOR",
+                "dependency":
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            },
+            {
+                "name": "Opérateur NOT",
+                "dependency":
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            },
+            {
+                "name": "Recherche MD5",
+                "dependency":
+                    [
+                        {
+                            "name": "pynotify",
+                            "install":
+                                [
+                                    {
+                                        "type": "apt-get",
+                                        "target": "python-pynotify",
+                                        "tested":
+                                            [
+                                                "ubuntu 12.10",
+                                                "xubuntu 12.10"
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            },
+            {
+                "name": "Substitution mono-alphabétique",
+                "dependency":
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            }
+        ],
+    "Stéganographie":
+        [
+            {
+                "name": "Couches RVB",
+                "dependency":
+                    [
+                        {
+                            "name": "Image",
+                            "install":
+                                [
+                                    {
+                                        "type": "apt-get",
+                                        "target": "python-imaging",
+                                        "tested":
+                                            [
+                                                "ubuntu 12.10",
+                                                "xubuntu 12.10"
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            }
+        ],
+    "Divers":
+        [
+            {
+                "name": "Commande strings",
+                "dependency":
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            },
+            {
+                "name": "Conversion de base",
+                "dependency":
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            },
+            {
+                "name": "Mail \"Anonyme\"",
+                "dependency":
+                    [
+                        {
+                            "name": "smtplib",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        },
+                        {
+                            "name": "email",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        },
+                        {
+                            "name": "pynotify",
+                            "install":
+                                [
+                                    {
+                                        "type": "apt-get",
+                                        "target": "python-pynotify",
+                                        "tested":
+                                            [
+                                                "ubuntu 12.10",
+                                                "xubuntu 12.10"
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            },
+            {
+                "name": "Regex WEB",
+                "dependency":
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            },
+            {
+                "name": "Traducteur ASM",
+                "dependency":
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            },
+            {
+                "name": "Moniteur de fichier",
+                "dependency":
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            },
+            {
+                "name": "Password Strenght",
+                "dependency":
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            },
+            {
+                "name": "Code-barres",
+                "dependency":
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            },
+            {
+                "name": "Google Wi-Fi Positioning System",
+                "dependency":
+                    [
+                        {
+                            "name": "test 1"
+                        },
+                        {
+                            "name": "test 2"
+                        },
+                        {
+                            "name": "test 3"
+                        },
+                        {
+                            "name": "simplejson",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        },
+                        {
+                            "name": "osmgpsmap",
+                            "homepage":
+                                [
+                                    "http://nzjrs.github.com/osm-gps-map/"
+                                ],
+                            "doc":
+                                [
+                                    "http://nzjrs.github.com/osm-gps-map/docs/reference/html/index.html"
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "apt-get",
+                                        "target": "python-osmgpsmap",
+                                        "tested":
+                                            [
+                                                "ubuntu 12.10",
+                                                "xubuntu 12.10"
+                                            ]
+                                    },
+                                    {
+                                        "type": "source",
+                                        "target": "http://github.com/nzjrs/osm-gps-map/tarball/master",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            }
+        ],
+    "Réseau":
+        [
+            {
+                "name": "Hostname Resolver",
+                "dependency":
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            },
+            {
+                "name": "Wi-Fi Scanner",
+                "dependency":
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            },
+            {
+                "name": "Wi-Fi Scanner 2",
+                "dependency":
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            },
+            {
+                "name": "ARP",
+                "description": "Affichage de la table ARP\nAjouter une entrée la table ARP\nFixer la table ARP\nDétéction ARP-Poisonning\nRechercher un adresse MAC à partir d'une adresse IP\nRechercher une adresse IP à partir d'une adresse MAC",
+                "dependency":
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            },
+            {
+                "name": "ICMP/SYN Scan",
+                "description": "IP v4 (+ spoof IP source)\nIP v6 (+ spoof IP source)",
+                "dependency":
+                    [
+                        {
+                            "name": "scapy",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
+            }
+        ]
+}

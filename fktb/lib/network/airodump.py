@@ -39,15 +39,12 @@ while 1:
 					print "Probed ESSIDs   : "+re.sub('[\s]+$', '', re.sub('^[\s]+', '', row[6]))+"\n"
 	sleep(1)
 
-
-###
-
-
+"""
 	sudo airodump-ng mon0 --write "fktb_path+"/airodump_ng_dump.csv --output-format csv -u 1"
 
         commands.getstatusoutput("airodump-ng --write /tmp/fern-log/zfern-wep --output-format csv \
                                     --encrypt wep %s"%(monitor))          #FOR WEP
-        
+
 
         commands.getstatusoutput('killall airodump-ng')
         commands.getstatusoutput('killall airmon-ng')
@@ -63,3 +60,4 @@ while 1:
                 mac_address = mac_str[mac_index+36:mac_index+36+17].replace('-',':')
 
 
+"""

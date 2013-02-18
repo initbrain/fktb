@@ -38,7 +38,7 @@ setup(
     install_requires=REQUIREMENTS,
     entry_points={
         'console_scripts': [
-            'fktb = fktb.interface.gui:main',
+            'fktb = fktb.interface.gui:main'
             #'fktb-cli = fktb.cli:main'
         ]
     },
@@ -50,6 +50,10 @@ setup(
                           'fktb/images/white_hat.svg',
                           'fktb/images/a_propos.png',
                           'fktb/images/attente.gif',
-                          'fktb/images/enregistrer.png'])
+                          'fktb/images/enregistrer.png',
+                          'fktb/core/modules.json'])
     ]
 )
+
+from fktb.interface.gui.install import main
+main()

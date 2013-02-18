@@ -2,6 +2,94 @@
 # Julien Deudon (initbrain) & Geoffrey Robert (mks)
 # Free-knowledge Toolbox v0.2.3 du 20/06/2012
 
+# Gestion des importations
+
+import_error = ""                                # Variable de stockage des erreurs d'importation
+
+import smtplib                                # <-
+from email.MIMEMultipart import MIMEMultipart                #  |
+from email.MIMEBase import MIMEBase                    #  Module utilisés pour l'envoi de mail
+from email.MIMEText import MIMEText                    #  |
+from email.Utils import COMMASPACE, formatdate                #  |
+from email import Encoders
+
+# Modules utilisés pour l'interface graphique
+try:
+    import pygtk
+except ImportError:
+    import_error += "\npygtk 2.3.90 ou ultérieur"
+try:
+    import gtk
+except ImportError:
+    import_error += "\ngtk"
+else:
+    if gtk.pygtk_version < (2, 3, 90) and import_error == "":
+        import_error += "\npygtk 2.3.90 ou ultérieur"
+
+try: import httplib2                            # Module utilisé pour effectuer des requêtes HTTP
+except ImportError: import_error += "\nhttplib2"
+try: import Image                            # Module utilisé par le module Couche RVB (stéganographie)
+except ImportError: import_error += "\nPIL (Image)"
+try: import re                                # Module utilisé pour le parsage (expressions rationnelles)
+except ImportError: import_error += "\nre"
+try: import webbrowser                            # Module permettant d'ouvrir le navigateur web
+except ImportError: import_error += "\nwebbrowser"
+try: from commands import getoutput, getstatusoutput            # Module utilisé pour récupérer la sortie d'une commande
+except ImportError: import_error += "\ncommands"
+try: import hashlib                            # Module utilisé pour le hashage de textes ou fichiers
+except ImportError: import_error += "\nhashlib"
+try: import thread                            # Module pour le multithreading
+except ImportError: import_error += "\nthread"
+try: import subprocess                            # Module permettant de créer des sous-processus
+except ImportError: import_error += "\nsubprocess"
+try: from urllib import urlencode                    # Module utilisé pour encoder des paramètres dans une URL
+except ImportError: import_error += "\nurllib"
+try: import urllib2                            # Module utilisé pour envoyer des requete aux API Google
+except ImportError: import_error += "\nurllib2"
+try: from time import *                            # Modules pour la vitesse du mouvement de la progressbar et
+except ImportError: import_error += "\ntime"                # le calcul du temps pris par un traitement
+
+try: import os                                # Module utilisé pour éxecuter des commandes
+except ImportError: import_error += "\nos"                # et récupérer des informations d'environnement
+
+try: import pynotify                            # Module utilisé pour afficher des notifications
+except ImportError: import_error += "\npython-notify"
+
+try: import simplejson                            # <-
+except ImportError: import_error += "\nsimplejson"            #  |
+try: import sys                                #  |
+except ImportError: import_error += "\nsys"                #  Modules utilisés pour la géolocalisation
+try: import os.path                            #  |
+except ImportError: import_error += "\nos.path"                #  |
+try: import gobject                            #  |
+except ImportError: import_error += "\ngobject"                # <-
+
+try:
+    #Try static lib first
+    mydir = os.path.dirname(os.path.abspath(__file__))
+    libdir = os.path.abspath(os.path.join(mydir, "..", "python", ".libs"))
+    sys.path.insert(0, libdir)
+
+    import osmgpsmap                        # Module utilisé pour afficher une OpenStreetMap
+except ImportError: import_error += "\nosmgpsmap"
+#else: print "Utilisation de osmgpsmap : %s (version %s)" % (osmgpsmap.__file__, osmgpsmap.__version__)
+
+try: import csv                                # Module utilisé pour lire les logs de airodump-ng
+except ImportError: import_error += "\ncsv"
+
+# Gestion des éventuelles erreurs d'importation
+
+if import_error != "":
+    print "Il est nécessaire de posséder les librairies suivantes pour faire fonctionner cette boîte à outils :" + import_error
+    raise SystemExit
+
+# Configurations
+
+from fktb.core.constants import FKTB_PATH
+
+gtk.gdk.threads_init() # Important : initialisation pour l'utilisation de threads
+gtk.gdk.threads_enter()
+
 class toolbox:
 
 # Recherche de mise à jour
@@ -107,7 +195,8 @@ class toolbox:
             gtk.gdk.threads_leave()
         else: getstatusoutput(su_gui_cmd+" 'killall airodump-ng'")
 
-        if os.path.exists(fktb_path+"tmp/airodump-ng-01.csv"): os.remove(fktb_path+"tmp/airodump-ng-01.csv")
+        if os.path.exists("%s/tmp/airodump-ng-01.csv" % FKTB_PATH):
+            os.remove("%s/tmp/airodump-ng-01.csv" % FKTB_PATH)
 
         self.progressbarWifi2.set_fraction(0)
         self.progressbarWifi2.set_text("En attente ...")
@@ -676,10 +765,11 @@ class toolbox:
 
         # Affichage d'une notification
         if pynotify.init("Free-knowledge Toolbox"):
-            n = pynotify.Notification("Free-knowledge Toolbox", "MD5 - Recherche terminée", fktb_path+"images/icone.png")
+            n = pynotify.Notification("Free-knowledge Toolbox", "MD5 - Recherche terminée", "%s/images/icone.png" % FKTB_PATH)
             if not n.show(): print "échec de notification ..."
         else:
-            if "not found" in getoutput('notify-send -i '+fktb_path+'images/icone.png -t 0 "Free-knowledge Toolbox" "MD5 - Recherche terminée"'): print "notify-send n'est pas installé ..."
+            if "not found" in getoutput('notify-send -i %s/images/icone.png -t 0 "Free-knowledge Toolbox" "MD5 - Recherche terminée"' % FKTB_PATH):
+                print "notify-send n'est pas installé ..."
 
         # Réactivation du boutton de validation
         self.btn_checkmd5.set_sensitive(True)
@@ -798,10 +888,10 @@ class toolbox:
 
                 # Affichage d'une notification
                 if pynotify.init("Free-knowledge Toolbox"):
-                    n = pynotify.Notification("Free-knowledge Toolbox", "Mail - Erreur d\'envoi", fktb_path+"images/icone.png")
+                    n = pynotify.Notification("Free-knowledge Toolbox", "Mail - Erreur d\'envoi", "%s/images/icone.png" % FKTB_PATH)
                     if not n.show(): print "échec de notification ..."
                 else:
-                    if "not found" in getoutput('notify-send -i '+fktb_path+'images/icone.png -t 0 "Free-knowledge Toolbox" "Mail - Erreur d\'envoi"'):
+                    if "not found" in getoutput('notify-send -i %s/images/icone.png -t 0 "Free-knowledge Toolbox" "Mail - Erreur d\'envoi"' % FKTB_PATH):
                         print "notify-send n'est pas installé ..."
 
                 # Réactivation du boutton de validation
@@ -813,10 +903,10 @@ class toolbox:
                 if str(i) == nombre_envoi:
                     # Affichage d'une notification
                     if pynotify.init("Free-knowledge Toolbox"):
-                        n = pynotify.Notification("Free-knowledge Toolbox", "Mail - Envoi terminé", fktb_path+"images/icone.png")
+                        n = pynotify.Notification("Free-knowledge Toolbox", "Mail - Envoi terminé", "%s/images/icone.png" % FKTB_PATH)
                         if not n.show(): print "échec de notification ..."
                     else:
-                        if "not found" in getoutput('notify-send -i '+fktb_path+'images/icone.png -t 0 "Free-knowledge Toolbox" "Mail - Envoi terminé"'):
+                        if "not found" in getoutput('notify-send -i %s/images/icone.png -t 0 "Free-knowledge Toolbox" "Mail - Envoi terminé"' % FKTB_PATH):
                             print "notify-send n'est pas installé ..."
                 i=i+1
 
@@ -996,11 +1086,11 @@ class toolbox:
                     nb.putdata(b)
                     # Fusion des trois nouvelles images
                     imgnew = Image.merge('RGB',(r,v,nb))
-                imgnew.save(fktb_path+"tmp/result_stega.png")
+                imgnew.save("%s/tmp/result_stega.png" % FKTB_PATH)
 
                 # On affiche l'image
                 self.img_result = gtk.Image()
-                self.img_result.set_from_file(fktb_path+"tmp/result_stega.png")
+                self.img_result.set_from_file("%s/tmp/result_stega.png" % FKTB_PATH)
                 self.scrolled_img_result_c_rgb.add_with_viewport(self.img_result)
                 self.img_result.show()
 
@@ -1245,11 +1335,11 @@ class toolbox:
                 gtk.gdk.threads_leave()
 
         # Écriture du binaire dans le fichier binaire_zenk_dev2
-        output = open(fktb_path+"tmp/result_opnot",'wb')
+        output = open("%s/tmp/result_opnot" % FKTB_PATH,'wb')
         output.write(data)
         output.close()
 
-        self.label_out_file_op_not.set_text("Fichier en sortie : ("+getoutput('file -b '+fktb_path+'tmp/result_opnot')+")")
+        self.label_out_file_op_not.set_text("Fichier en sortie : ("+getoutput('file -b %s/tmp/result_opnot' % FKTB_PATH)+")")
 
         self.btn_img_op_not.set_sensitive(True)
         self.btn_save_out_op_not.set_sensitive(True)
@@ -1274,7 +1364,7 @@ class toolbox:
         else:
             sortie=0
         dialogue.destroy()
-        if sortie: os.system("cp \""+fktb_path+"tmp/result_opnot\" \""+sortie+"\"")
+        if sortie: os.system("cp \"%s/tmp/result_opnot\" \"" % FKTB_PATH + sortie + "\"")
 
     # XOR
 
@@ -1502,7 +1592,7 @@ class toolbox:
         dialogue.destroy()
 
         if sortie != 0:
-            os.system("cp \""+fktb_path+"tmp/result_stega.png\" \""+sortie+"\"")
+            os.system("cp \"%s/tmp/result_stega.png\" \"" % FKTB_PATH + sortie + "\"")
 
     def dialogueFichierStega(self, parent):
         # On efface les éventuelles images
@@ -1713,7 +1803,7 @@ class toolbox:
         self.aide_regex_win.set_transient_for(self.fenetre)
         self.aide_regex_win.set_resizable(True)
         self.aide_regex_win.set_title("Aide regex") # Titre de la fenêtre
-        self.aide_regex_win.set_icon_from_file(fktb_path+"images/icone.png") # Spécifie une icône
+        self.aide_regex_win.set_icon_from_file("%s/images/icone.png" % FKTB_PATH) # Spécifie une icône
         self.aide_regex_win.set_position(gtk.WIN_POS_CENTER_ON_PARENT) # Centrer la fenêtre au lancement
         self.aide_regex_win.set_border_width(0)
         self.aide_regex_win.set_size_request(700, 300) # Taille de la fenêtre
@@ -1764,7 +1854,7 @@ class toolbox:
         about_win.set_transient_for(self.fenetre)
         about_win.set_resizable(False)
         about_win.set_title("À Propos ...") # Titre de la fenêtre
-        about_win.set_icon_from_file(fktb_path+"images/icone.png") # Spécifie une icône
+        about_win.set_icon_from_file("%s/images/icone.png" % FKTB_PATH) # Spécifie une icône
         about_win.set_position(gtk.WIN_POS_CENTER_ON_PARENT) # Centrer la fenêtre au lancement
         about_win.set_border_width(0)
         about_win.set_size_request(430, 340) # Taille de la fenêtre
@@ -1772,7 +1862,7 @@ class toolbox:
         fixed_about = gtk.Fixed()
 
         img_a_propos = gtk.Image()
-        img_a_propos.set_from_file(fktb_path+"images/a_propos.png")
+        img_a_propos.set_from_file("%s/images/a_propos.png" % FKTB_PATH)
         img_a_propos.show()
 
         fixed_about.put(img_a_propos, 0, 0)
@@ -1821,7 +1911,7 @@ class toolbox:
         boite_ev_gpl.show()
 
         gpl = gtk.Image()
-        gpl.set_from_file(fktb_path+"images/logo_gpl_v3.png")
+        gpl.set_from_file("%s/images/logo_gpl_v3.png" % FKTB_PATH)
         boite_ev_gpl.add(gpl)
         gpl.show()
 
@@ -1898,9 +1988,9 @@ class toolbox:
 
         # image_laptop
         image_laptop = gtk.Image()
-        #        image_laptop.set_from_file(fktb_path+"images/laptop.png")
+        #        image_laptop.set_from_file("%s/images/laptop.png" % FKTB_PATH)
         #        image_laptop.set_pixel_size(10)
-        pixbuf_laptop = gtk.gdk.pixbuf_new_from_file_at_size(fktb_path+"images/white_hat.svg", int(boite1_accueil.size_request()[0]), -1)
+        pixbuf_laptop = gtk.gdk.pixbuf_new_from_file_at_size("%s/images/white_hat.svg" % FKTB_PATH, int(boite1_accueil.size_request()[0]), -1)
         image_laptop.set_from_pixbuf(pixbuf_laptop)
         boite_evenement_laptop.add(image_laptop)
         boite_evenement_laptop.set_visible_window(False)
@@ -1928,7 +2018,7 @@ class toolbox:
 
         # image_april
         image_april = gtk.Image()
-        image_april.set_from_file(fktb_path+"images/logo_april.png")
+        image_april.set_from_file("%s/images/logo_april.png" % FKTB_PATH)
         boite_evenement_april.add(image_april)
         image_april.show()
 
@@ -2240,7 +2330,7 @@ class toolbox:
         self.btn_calc_hash.show()
 
         # self.img_calc_hash
-        buf_anim_hash = gtk.gdk.PixbufAnimation(fktb_path+"images/attente.gif")
+        buf_anim_hash = gtk.gdk.PixbufAnimation("%s/images/attente.gif" % FKTB_PATH)
         self.img_calc_hash = gtk.Image()
         self.img_calc_hash.set_from_animation(buf_anim_hash)
         boite4_hash.pack_start(self.img_calc_hash, True, False, 0)
@@ -2961,7 +3051,7 @@ class toolbox:
         boite9_c_rgb.pack_end(self.boite_evenement_enr_result_c_rgb, False, False, 0)
         # self.image_enr_result_c_rgb
         self.image_enr_result_c_rgb = gtk.Image()
-        self.image_enr_result_c_rgb.set_from_file(fktb_path+"images/enregistrer.png")
+        self.image_enr_result_c_rgb.set_from_file("%s/images/enregistrer.png" % FKTB_PATH)
         self.boite_evenement_enr_result_c_rgb.add(self.image_enr_result_c_rgb)
         self.image_enr_result_c_rgb.show()
         # On relie une action à la boîte
@@ -3872,11 +3962,11 @@ class toolbox:
                 rssiMin=-120
                 rssiMax=-30
 
-                t_airodump = thread.start_new_thread(getstatusoutput, (su_gui_cmd+" \"airodump-ng "+iface+" --write '"+fktb_path+"tmp/airodump-ng' --output-format csv -u 1\"",))
+                t_airodump = thread.start_new_thread(getstatusoutput, (su_gui_cmd+" \"airodump-ng "+iface+" --write '%s/tmp/airodump-ng' --output-format csv -u 1\"" % FKTB_PATH,))
 
                 while self.enCoursWifi2 and su_gui_cmd:
                     try:
-                        with open(fktb_path+"tmp/airodump-ng-01.csv", 'rb') as f:
+                        with open("%s/tmp/airodump-ng-01.csv" % FKTB_PATH, 'rb') as f:
                             reader = csv.reader(f)
                             for x in reader:
                                 if x:
@@ -4229,7 +4319,7 @@ class toolbox:
         # self.btn_barCode
         self.btn_barCode = gtk.Button("ouvrir")
         self.btn_barCode.set_size_request(int(self.btn_barCode.size_request()[0]*1.2),self.btn_barCode.size_request()[1])
-        self.btn_barCode.connect("clicked", lambda e: subprocess.Popen(("python",fktb_path+"lib/other/zbar.py"), stdout=subprocess.PIPE, stderr=subprocess.PIPE))
+        self.btn_barCode.connect("clicked", lambda e: subprocess.Popen(("python","%s/lib/other/zbar.py" % FKTB_PATH), stdout=subprocess.PIPE, stderr=subprocess.PIPE))
         boite1_barCode.pack_start(self.btn_barCode, False, False, 0)
         self.btn_barCode.show()
 
@@ -4442,7 +4532,7 @@ class toolbox:
                         gtk.gdk.threads_leave()
                     else: self.btn_geoloc.set_label("Echec d'envoi, nouvel essai dans 5 secondes")
                 else:
-                    pb = gtk.gdk.pixbuf_new_from_file_at_size(fktb_path+"images/icone.png", 24,24)
+                    pb = gtk.gdk.pixbuf_new_from_file_at_size("%s/images/icone.png" % FKTB_PATH, 24,24)
                     try:
                         self.osm.image_add(output["location"]["latitude"], output["location"]["longitude"], pb)
                         self.osm.set_center_and_zoom(output["location"]["latitude"], output["location"]["longitude"], 16)
@@ -4516,7 +4606,7 @@ class toolbox:
         self.fenetre.set_resizable(True)            # Autoriser le redimensionnement de la fenêtre
         self.fenetre.set_title("Free-knowledge Toolbox")    # Titre de la fenêtre
         #self.fenetre.set_decorated(False)            # Cacher les contours de la fenêtre
-        self.fenetre.set_icon_from_file(fktb_path+"images/icone.png")    # Spécifie une icône
+        self.fenetre.set_icon_from_file("%s/images/icone.png" % FKTB_PATH)    # Spécifie une icône
         self.fenetre.set_position(gtk.WIN_POS_CENTER)        # Centrer la fenêtre au lancement
         self.fenetre.set_border_width(10)            # Largueur de la bordure intérieur
         self.fenetre.set_size_request(800, 500)            # Taille de la fenêtre
@@ -4569,7 +4659,7 @@ class toolbox:
 def delete():
     """Gestion des evenements de fermeture"""
     # Dès qu'on quitte : suppression des fichiers result_stega.png & result_opnot s'ils existent
-    [os.remove(fktb_path+"tmp/"+i) for i in ['result_stega.png','result_opnot', 'airodump-ng-01.csv'] if os.path.exists(fktb_path+"tmp/"+i)]
+    [os.remove("%s/tmp/" % FKTB_PATH + i) for i in ['result_stega.png','result_opnot', 'airodump-ng-01.csv'] if os.path.exists("%s/tmp/" % FKTB_PATH + i)]
 
     # TODO tuer le process airodump-ng si celui-ci est lancé via la module wifi 2
     # Vérification des permissions
@@ -4582,104 +4672,8 @@ def delete():
     exit() # but gtk.main_quit() fail with KeyboardInterrupt ...
 
 def main():
-    # Gestion des importations
-
-    import_error = ""                                # Variable de stockage des erreurs d'importation
-
-    import smtplib                                # <-
-    from email.MIMEMultipart import MIMEMultipart                #  |
-    from email.MIMEBase import MIMEBase                    #  Module utilisés pour l'envoi de mail
-    from email.MIMEText import MIMEText                    #  |
-    from email.Utils import COMMASPACE, formatdate                #  |
-    from email import Encoders
-
-    # Modules utilisés pour l'interface graphique
-    try:
-        import pygtk
-    except ImportError:
-        import_error += "\npygtk 2.3.90 ou ultérieur"
-    try:
-        import gtk
-    except ImportError:
-        import_error += "\ngtk"
-    else:
-        if gtk.pygtk_version < (2, 3, 90) and import_error == "":
-            import_error += "\npygtk 2.3.90 ou ultérieur"
-
-    try: import httplib2                            # Module utilisé pour effectuer des requêtes HTTP
-    except ImportError: import_error += "\nhttplib2"
-    try: import Image                            # Module utilisé par le module Couche RVB (stéganographie)
-    except ImportError: import_error += "\nPIL (Image)"
-    try: import re                                # Module utilisé pour le parsage (expressions rationnelles)
-    except ImportError: import_error += "\nre"
-    try: import webbrowser                            # Module permettant d'ouvrir le navigateur web
-    except ImportError: import_error += "\nwebbrowser"
-    try: from commands import getoutput, getstatusoutput            # Module utilisé pour récupérer la sortie d'une commande
-    except ImportError: import_error += "\ncommands"
-    try: import hashlib                            # Module utilisé pour le hashage de textes ou fichiers
-    except ImportError: import_error += "\nhashlib"
-    try: import thread                            # Module pour le multithreading
-    except ImportError: import_error += "\nthread"
-    try: import subprocess                            # Module permettant de créer des sous-processus
-    except ImportError: import_error += "\nsubprocess"
-    try: from urllib import urlencode                    # Module utilisé pour encoder des paramètres dans une URL
-    except ImportError: import_error += "\nurllib"
-    try: import urllib2                            # Module utilisé pour envoyer des requete aux API Google
-    except ImportError: import_error += "\nurllib2"
-    try: from time import *                            # Modules pour la vitesse du mouvement de la progressbar et
-    except ImportError: import_error += "\ntime"                # le calcul du temps pris par un traitement
-
-    try: import os                                # Module utilisé pour éxecuter des commandes
-    except ImportError: import_error += "\nos"                # et récupérer des informations d'environnement
-
-    try: import pynotify                            # Module utilisé pour afficher des notifications
-    except ImportError: import_error += "\npython-notify"
-
-    try: import simplejson                            # <-
-    except ImportError: import_error += "\nsimplejson"            #  |
-    try: import sys                                #  |
-    except ImportError: import_error += "\nsys"                #  Modules utilisés pour la géolocalisation
-    try: import os.path                            #  |
-    except ImportError: import_error += "\nos.path"                #  |
-    try: import gobject                            #  |
-    except ImportError: import_error += "\ngobject"                # <-
-
-    try:
-        #Try static lib first
-        mydir = os.path.dirname(os.path.abspath(__file__))
-        libdir = os.path.abspath(os.path.join(mydir, "..", "python", ".libs"))
-        sys.path.insert(0, libdir)
-
-        import osmgpsmap                        # Module utilisé pour afficher une OpenStreetMap
-    except ImportError: import_error += "\nosmgpsmap"
-    #else: print "Utilisation de osmgpsmap : %s (version %s)" % (osmgpsmap.__file__, osmgpsmap.__version__)
-
-    try: import csv                                # Module utilisé pour lire les logs de airodump-ng
-    except ImportError: import_error += "\ncsv"
-
-    # Gestion des éventuelles erreurs d'importation
-
-    if import_error != "":
-        print "Il est nécessaire de posséder les librairies suivantes pour faire fonctionner cette boîte à outils :" + import_error
-        raise SystemExit
-
-    # Configurations
-
-    gtk.gdk.threads_init() # Important : initialisation pour l'utilisation de threads
-    gtk.gdk.threads_enter()
-
-    #TODO voir les emplacements ne sont plus les même
-    # Chemin des dossiers "images" & "tmp"
-    if os.path.dirname(__file__) and os.path.dirname(__file__)[0] != "/":
-        fktb_path = os.getcwd() + "/" + os.path.dirname(__file__) + "/"
-    elif os.path.dirname(__file__):
-        fktb_path = os.path.dirname(__file__) + "/"
-    else:
-        fktb_path = os.getcwd() + "/"
-
     # Exécution
-    try: toolbox()
-    except (KeyboardInterrupt, SystemExit): delete()
-
-if __name__ == "__main__":
-    main()
+    try:
+        toolbox()
+    except (KeyboardInterrupt, SystemExit):
+        delete()
