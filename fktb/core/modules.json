@@ -719,6 +719,180 @@
                                         ]
                             }
                         ]
+            },
+            {
+                "name": "Dig ",
+                "description": "Dig est une commande pour troubleshooter les problèmes de résolutions.",
+                "dependency":
+                        [
+                            {
+                                "name": "",
+                                "homepage":
+                                        [
+                                            ""
+                                        ],
+                                "doc":
+                                        [
+                                            ""
+                                        ],
+                                "install":
+                                        [
+                                            {
+                                                "type": "",
+                                                "target": "",
+                                                "tested":
+                                                        [
+                                                            ""
+                                                        ]
+                                            }
+                                        ]
+                            }
+                        ]
+            },
+            {
+                "name": "IPv4 Subnets",
+                "description": "Ce module permet de calculer les sous réseaux en IPv4.",
+                "dependency":
+                        [
+                            {
+                                "name": "",
+                                "homepage":
+                                        [
+                                            ""
+                                        ],
+                                "doc":
+                                        [
+                                            ""
+                                        ],
+                                "install":
+                                        [
+                                            {
+                                                "type": "",
+                                                "target": "",
+                                                "tested":
+                                                        [
+                                                            ""
+                                                        ]
+                                            }
+                                        ]
+                            }
+                        ]
+            },
+            {
+                "name": "IPv6 Subnets",
+                "description": "Ce module permet de calculer les sous-réseaux en IPv6",
+                "dependency":
+                        [
+                            {
+                                "name": "",
+                                "homepage":
+                                        [
+                                            ""
+                                        ],
+                                "doc":
+                                        [
+                                            ""
+                                        ],
+                                "install":
+                                        [
+                                            {
+                                                "type": "",
+                                                "target": "",
+                                                "tested":
+                                                        [
+                                                            ""
+                                                        ]
+                                            }
+                                        ]
+                            }
+                        ]
+            },
+            {
+                "name": "tcpdump",
+                "description": "Le module tcpdump va permettre de configurer sa capture de trame.",
+                "dependency":
+                        [
+                            {
+                                "name": "",
+                                "homepage":
+                                        [
+                                            ""
+                                        ],
+                                "doc":
+                                        [
+                                            ""
+                                        ],
+                                "install":
+                                        [
+                                            {
+                                                "type": "",
+                                                "target": "",
+                                                "tested":
+                                                        [
+                                                            ""
+                                                        ]
+                                            }
+                                        ]
+                            }
+                        ]
+            },
+            {
+                "name": "tcptrack",
+                "description": "Permet de suivre ses connexions TCP (adresse client/serveur, statut, débit)",
+                "dependency":
+                        [
+                            {
+                                "name": "",
+                                "homepage":
+                                        [
+                                            ""
+                                        ],
+                                "doc":
+                                        [
+                                            ""
+                                        ],
+                                "install":
+                                        [
+                                            {
+                                                "type": "",
+                                                "target": "",
+                                                "tested":
+                                                        [
+                                                            ""
+                                                        ]
+                                            }
+                                        ]
+                            }
+                        ]
+            },
+            {
+                "name": "Connections Monitoring",
+                "description": "Va permettre de définir de la surveillance de connexion entrante et/ou sortante.",
+                "dependency":
+                        [
+                            {
+                                "name": "",
+                                "homepage":
+                                        [
+                                            ""
+                                        ],
+                                "doc":
+                                        [
+                                            ""
+                                        ],
+                                "install":
+                                        [
+                                            {
+                                                "type": "",
+                                                "target": "",
+                                                "tested":
+                                                        [
+                                                            ""
+                                                        ]
+                                            }
+                                        ]
+                            }
+                        ]
             }
         ]
 }
