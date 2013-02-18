@@ -690,6 +690,35 @@
                                 ]
                         }
                     ]
+            },
+            {
+                "name": "Whois",
+                "description": "Whois domain lookup",
+                "dependency":
+                        [
+                            {
+                                "name": "",
+                                "homepage":
+                                        [
+                                            ""
+                                        ],
+                                "doc":
+                                        [
+                                            ""
+                                        ],
+                                "install":
+                                        [
+                                            {
+                                                "type": "",
+                                                "target": "",
+                                                "tested":
+                                                        [
+                                                            ""
+                                                        ]
+                                            }
+                                        ]
+                            }
+                        ]
             }
         ]
 }
