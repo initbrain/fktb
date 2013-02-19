@@ -117,7 +117,6 @@ class install():
                 break
 
     def checkSelection(self, data):
-        print "test"
         for checkbtn in self.checkbtns.keys():
             #TODO read modules.json & generate ./fktb in ~
             for category in data.keys():
@@ -129,24 +128,18 @@ class install():
                         data[category].pop(i)
                     i+=1
         try:
-            simplejson.dump(data, file(os.path.join(CONFIG_PATH, 'modules.json'), 'wb'), ensure_ascii=False)
+            modules_path = os.path.join(CONFIG_PATH, 'modules.json')
+            if not os.path.exists(CONFIG_PATH):
+                os.makedirs(CONFIG_PATH)
+            if not (os.path.exists(modules_path) and os.path.isfile(modules_path)):
+                with open(modules_path, 'wb') as modules_file:
+                    modules_file.write('')
+            simplejson.dump(data, open(modules_path, 'wb'), ensure_ascii=False)
         except Exception as err:
             print "Erreur : %s" % err
         else:
-            print "Création du fichier modules.json terminée."
-
-# {
-#     "Cryptographie":
-#         [
-#             {
-#                 "name": "Calcul d'empreintes",
-
-        #TODO next
-        # cmd, show_stdout=True,
-        # filter_stdout=None, cwd=None,
-        # raise_on_returncode=True,
-        # command_level=logger.DEBUG, command_desc=None,
-        # extra_environ=None
+            print "Création du fichier : %s" % modules_path
+        exit()
 
     def __init__(self):
         self.fenetre = gtk.Window(gtk.WINDOW_TOPLEVEL)

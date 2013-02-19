@@ -85,7 +85,7 @@ if import_error != "":
 
 # Configurations
 
-from fktb.core.constants import FKTB_PATH
+from fktb.core.constants import FKTB_PATH, CONFIG_PATH
 
 gtk.gdk.threads_init() # Important : initialisation pour l'utilisation de threads
 gtk.gdk.threads_enter()
@@ -1922,11 +1922,27 @@ class toolbox:
         about_win.show_all()
 
     def menuChoice(self, parent):
-        try: choix = self.treestore_menu.get_value(self.treeview_menu.get_selection().get_selected()[1], 0)
-        except TypeError: pass
+        try:
+            choix = self.treestore_menu.get_value(self.treeview_menu.get_selection().get_selected()[1], 0)
+        except TypeError:
+            pass
         else:
-            for fils in self.bloc_tabs.get_children():
-                if choix == self.bloc_tabs.get_tab_label_text(fils): self.bloc_tabs.set_current_page(self.bloc_tabs.page_num(fils))
+            #TODO modules en développement ...
+            if choix in ["ARP",
+                         "ICMP/SYN Scan",
+                         "Whois",
+                         "Dig",
+                         "IPv4 Subnets",
+                         "IPv6 Subnets",
+                         "tcpdump",
+                         "tcptrack",
+                         "tcpflow",
+                         "Connections Monitoring"]:
+                self.bloc_tabs.set_current_page(0)
+            else:
+                for fils in self.bloc_tabs.get_children():
+                    if choix == self.bloc_tabs.get_tab_label_text(fils):
+                        self.bloc_tabs.set_current_page(self.bloc_tabs.page_num(fils))
 
     def tabBuilder(self): # Créer un nouveau bloc-notes, définir la position des onglets
     # Notebook du contenu
@@ -1948,6 +1964,24 @@ class toolbox:
         self.bloc_tabs.set_show_tabs(0)
 
         self.fenetre.show_all()
+
+    def tabIndisp(self): # TAB Indisponible
+    # Boites 1 & 2
+        boite1_indisp = gtk.VBox(True, 5)
+        boite1_indisp.show()
+        boite2_indisp = gtk.HBox(True, 5)
+        boite1_indisp.pack_start(boite2_indisp, False, False, 0)
+        boite2_indisp.show()
+
+        # label_titre_indisp
+        label_titre_indisp = gtk.Label("")
+        label_titre_indisp.set_markup("<big><b>module en cours de développement</b></big>")
+        label_titre_indisp.set_alignment(0,5)
+        boite2_indisp.pack_start(label_titre_indisp, False, False, 0)
+        label_titre_indisp.show()
+
+        # Affichage
+        self.bloc_tabs.insert_page(boite1_indisp, gtk.Label("Indisponible"), -1)
 
     def tabAccueil(self): # TAB Accueil
     # Boites 1 & 2
@@ -4547,7 +4581,7 @@ class toolbox:
 
     def tabPrincipale(self):
         """Définir la page d'ouverture (TAB 1 : Accueil)"""
-        self.bloc_tabs.set_current_page(0)
+        self.bloc_tabs.set_current_page(1)
 
     def tabMenu(self):
     # Boite du menu
@@ -4563,16 +4597,20 @@ class toolbox:
         self.treestore_menu = gtk.TreeStore(str)
         self.treestore_menu.append(None, ["Accueil"])
 
-        # Catégories
-        categories = {"Cryptographie":("Calcul d'empreintes", "Chiffre de César", "Chiffre de Vigenère", "Chiffrement XOR", "Opérateur NOT", "Recherche MD5", "Substitution\nmono-alphabétique"),
-                      "Stéganographie":("Couches RVB"),
-                      "Divers":("Commande strings", "Conversion de base", "Mail \"Anonyme\"", "Regex WEB", "Traducteur ASM", "Moniteur de fichier", "Password Strenght", "Code-barres", "Google Wi-Fi\nPositioning System"),
-                      "Réseau":("Hostname Resolver","Wi-Fi Scanner","Wi-Fi Scanner 2")}
+        json_data=open(os.path.join(CONFIG_PATH, 'modules.json'))
+        data = simplejson.load(json_data)
+        json_data.close()
 
-        for nom_cat in categories.keys():
-            parent = self.treestore_menu.append(None, [nom_cat])
-            if type(categories[nom_cat])==tuple: [self.treestore_menu.append(parent, [module]) for module in categories[nom_cat]]
-            else : self.treestore_menu.append(parent, [categories[nom_cat]])
+        #TODO chargement des tab via arborescence de fichier basé sur cet exemple en commentaire :
+        # import unicodedata
+        # import re
+        for category in data.keys():
+            # print re.sub(' |-|\'|/', '_', unicodedata.normalize('NFKD', unicode(category)).encode('ascii', 'ignore').lower())
+            if type(data[category]) == type(list()) and len(data[category]) >= 1:
+                # for module in data[category]:
+                    # print re.sub(' |-|\'|/', '_', unicodedata.normalize('NFKD', unicode(module['name'])).encode('ascii', 'ignore').lower())
+                parent = self.treestore_menu.append(None, [category])
+                [self.treestore_menu.append(parent, [module['name']]) for module in data[category]]
 
         self.treeview_menu = gtk.TreeView(self.treestore_menu)
         self.treeview_menu.append_column(gtk.TreeViewColumn(None, gtk.CellRendererText(), text=0))
@@ -4617,6 +4655,7 @@ class toolbox:
         self.fullscreen=0
 
         self.tabBuilder()        # Construction du notebook pour le contenu
+        self.tabIndisp()           # Pade d'indisponibilité
         self.tabAccueil()        # Page d'accueil
         self.tabCesar()            # Page du module César
         self.tabSubstMonoAlpha()    # Page du module Substitution mono-alphabétique
@@ -4644,6 +4683,7 @@ class toolbox:
         #self.tabMailAccountChecker()    # Page du module de test de compte mail                            À venir ?
 
         self.tabMenu()
+        self.tabPrincipale()
         self.getWIface()
 
         gtk.main()

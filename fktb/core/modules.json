@@ -163,7 +163,7 @@
                     ]
             },
             {
-                "name": "Substitution mono-alphabétique",
+                "name": "Substitution\nmono-alphabétique",
                 "dependency":
                     [
                         {
@@ -479,7 +479,7 @@
                     ]
             },
             {
-                "name": "Google Wi-Fi Positioning System",
+                "name": "Google Wi-Fi\nPositioning System",
                 "dependency":
                     [
                         {
@@ -721,7 +721,7 @@
                         ]
             },
             {
-                "name": "Dig ",
+                "name": "Dig",
                 "description": "Dig est une commande pour troubleshooter les problèmes de résolutions.",
                 "dependency":
                         [
