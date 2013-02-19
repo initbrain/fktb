@@ -1,6 +1,12 @@
 FREE-KNOWLEDGE TOOLBOX
 GNU General Public License v3.0 - http://www.gnu.org/licenses/gpl-3.0.txt
 
+Installation :
+	$ git clone https://github.com/initbrain/fktb.git
+	$ cd fktb/
+	# python setup.py install
+	$ fktb
+
 Modifications du 20/06/2012 (v0.2.3) :
 	- Correction (fautes d'orthographe)
 	- Ajout d'un nouveau contributeur
