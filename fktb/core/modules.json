@@ -146,6 +146,37 @@
                 "dependency":
                     [
                         {
+                            "name": "httplib2",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "apt-get",
+                                        "target": "python-httplib2",
+                                        "tested":
+                                            [
+                                                "ubuntu 12.10",
+                                                "xubuntu 12.10"
+                                            ]
+                                    },
+                                    {
+                                        "type": "yum",
+                                        "target": "python-httplib2",
+                                        "tested":
+                                            [
+                                                "Fedora 18 Live Security (lxde)"
+                                            ]
+                                    }
+                                ]
+                        },
+                        {
                             "name": "pynotify",
                             "install":
                                 [
@@ -208,6 +239,28 @@
                                             [
                                                 "ubuntu 12.10",
                                                 "xubuntu 12.10"
+                                            ]
+                                    },
+                                    {
+                                        "type":
+                                            [
+                                                "yum",
+                                                "easy_install"
+                                            ],
+                                        "target":
+                                            [
+                                                [
+                                                    "python-devel"
+                                                ],
+                                                [
+                                                    "--find-links",
+                                                    "http://www.pythonware.com/products/pil/",
+                                                    "Imaging"
+                                                ]
+                                            ],
+                                        "tested":
+                                            [
+                                                "Fedora 18 Live Security (lxde)"
                                             ]
                                     }
                                 ]
@@ -343,7 +396,7 @@
                 "dependency":
                     [
                         {
-                            "name": "",
+                            "name": "httplib2",
                             "homepage":
                                 [
                                     ""
@@ -355,11 +408,20 @@
                             "install":
                                 [
                                     {
-                                        "type": "",
-                                        "target": "",
+                                        "type": "apt-get",
+                                        "target": "python-httplib2",
                                         "tested":
                                             [
-                                                ""
+                                                "ubuntu 12.10",
+                                                "xubuntu 12.10"
+                                            ]
+                                    },
+                                    {
+                                        "type": "yum",
+                                        "target": "python-httplib2",
+                                        "tested":
+                                            [
+                                                "Fedora 18 Live Security (lxde)"
                                             ]
                                     }
                                 ]
@@ -535,6 +597,14 @@
                                             ]
                                     },
                                     {
+                                        "type": "yum",
+                                        "target": "python-osmgpsmap",
+                                        "tested":
+                                            [
+                                                "Fedora 18 Live Security (lxde)"
+                                            ]
+                                    },
+                                    {
                                         "type": "source",
                                         "target": "http://github.com/nzjrs/osm-gps-map/tarball/master",
                                         "tested":
@@ -695,233 +765,233 @@
                 "name": "Whois",
                 "description": "Whois domain lookup",
                 "dependency":
-                        [
-                            {
-                                "name": "",
-                                "homepage":
-                                        [
-                                            ""
-                                        ],
-                                "doc":
-                                        [
-                                            ""
-                                        ],
-                                "install":
-                                        [
-                                            {
-                                                "type": "",
-                                                "target": "",
-                                                "tested":
-                                                        [
-                                                            ""
-                                                        ]
-                                            }
-                                        ]
-                            }
-                        ]
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
             },
             {
                 "name": "Dig",
                 "description": "Dig est une commande pour troubleshooter les problèmes de résolutions.",
                 "dependency":
-                        [
-                            {
-                                "name": "",
-                                "homepage":
-                                        [
-                                            ""
-                                        ],
-                                "doc":
-                                        [
-                                            ""
-                                        ],
-                                "install":
-                                        [
-                                            {
-                                                "type": "",
-                                                "target": "",
-                                                "tested":
-                                                        [
-                                                            ""
-                                                        ]
-                                            }
-                                        ]
-                            }
-                        ]
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
             },
             {
                 "name": "IPv4 Subnets",
                 "description": "Ce module permet de calculer les sous réseaux en IPv4.",
                 "dependency":
-                        [
-                            {
-                                "name": "",
-                                "homepage":
-                                        [
-                                            ""
-                                        ],
-                                "doc":
-                                        [
-                                            ""
-                                        ],
-                                "install":
-                                        [
-                                            {
-                                                "type": "",
-                                                "target": "",
-                                                "tested":
-                                                        [
-                                                            ""
-                                                        ]
-                                            }
-                                        ]
-                            }
-                        ]
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
             },
             {
                 "name": "IPv6 Subnets",
                 "description": "Ce module permet de calculer les sous-réseaux en IPv6",
                 "dependency":
-                        [
-                            {
-                                "name": "",
-                                "homepage":
-                                        [
-                                            ""
-                                        ],
-                                "doc":
-                                        [
-                                            ""
-                                        ],
-                                "install":
-                                        [
-                                            {
-                                                "type": "",
-                                                "target": "",
-                                                "tested":
-                                                        [
-                                                            ""
-                                                        ]
-                                            }
-                                        ]
-                            }
-                        ]
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
             },
             {
                 "name": "tcpdump",
                 "description": "Le module tcpdump va permettre de configurer sa capture de trame.",
                 "dependency":
-                        [
-                            {
-                                "name": "",
-                                "homepage":
-                                        [
-                                            ""
-                                        ],
-                                "doc":
-                                        [
-                                            ""
-                                        ],
-                                "install":
-                                        [
-                                            {
-                                                "type": "",
-                                                "target": "",
-                                                "tested":
-                                                        [
-                                                            ""
-                                                        ]
-                                            }
-                                        ]
-                            }
-                        ]
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
             },
             {
                 "name": "tcptrack",
                 "description": "Permet de suivre ses connexions TCP (adresse client/serveur, statut, débit)",
                 "dependency":
-                        [
-                            {
-                                "name": "",
-                                "homepage":
-                                        [
-                                            ""
-                                        ],
-                                "doc":
-                                        [
-                                            ""
-                                        ],
-                                "install":
-                                        [
-                                            {
-                                                "type": "",
-                                                "target": "",
-                                                "tested":
-                                                        [
-                                                            ""
-                                                        ]
-                                            }
-                                        ]
-                            }
-                        ]
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
             },
             {
                 "name": "tcpflow",
                 "description": "Permet de réaliser une capture de trame, avoir une structure des données, analyse de séquence.",
                 "dependency":
-                        [
-                            {
-                                "name": "",
-                                "homepage":
-                                        [
-                                            ""
-                                        ],
-                                "doc":
-                                        [
-                                            ""
-                                        ],
-                                "install":
-                                        [
-                                            {
-                                                "type": "",
-                                                "target": "",
-                                                "tested":
-                                                        [
-                                                            ""
-                                                        ]
-                                            }
-                                        ]
-                            }
-                        ]
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
             },
             {
                 "name": "Connections Monitoring",
                 "description": "Va permettre de définir de la surveillance de connexion entrante et/ou sortante.",
                 "dependency":
-                        [
-                            {
-                                "name": "",
-                                "homepage":
-                                        [
-                                            ""
-                                        ],
-                                "doc":
-                                        [
-                                            ""
-                                        ],
-                                "install":
-                                        [
-                                            {
-                                                "type": "",
-                                                "target": "",
-                                                "tested":
-                                                        [
-                                                            ""
-                                                        ]
-                                            }
-                                        ]
-                            }
-                        ]
+                    [
+                        {
+                            "name": "",
+                            "homepage":
+                                [
+                                    ""
+                                ],
+                            "doc":
+                                [
+                                    ""
+                                ],
+                            "install":
+                                [
+                                    {
+                                        "type": "",
+                                        "target": "",
+                                        "tested":
+                                            [
+                                                ""
+                                            ]
+                                    }
+                                ]
+                        }
+                    ]
             }
         ]
 }
