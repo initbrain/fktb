@@ -16,11 +16,30 @@ except ImportError:
 else:
     if gtk.pygtk_version < (2, 3, 90) and import_error == "":
         import_error += "\npygtk 2.3.90 ou ultérieur"
+try:
+    import inspect
+except ImportError:
+    import_error += "\ninspect"
+try:
+    import simplejson
+except ImportError:
+    import_error += "\nsimplejson"
+try:
+    import subprocess
+except ImportError:
+    import_error += "\nsubprocess"
+try:
+    from commands import getoutput
+except ImportError:
+    import_error += "\ncommands"
+
+# Gestion des éventuelles erreurs d'importation
+
+if import_error != "":
+    print "Il est nécessaire de posséder les librairies suivantes pour faire fonctionner cette boîte à outils :" + import_error
+    raise SystemExit
 
 import os
-import inspect
-import simplejson
-import subprocess
 
 from fktb import VERSION
 from fktb.core.constants import FKTB_PATH, CONFIG_PATH
@@ -78,43 +97,117 @@ class install():
                 if install['type'] and install['target']:
                     print "Type d'installation : %s" % install['type']
                     print "Cible : %s" % install['target']
+
                     if install.has_key('tested'):
                         for test in install['tested']:
                             print "Testée avec : %s" % test if test else "Non testée"
                     else:
                         print "Non testée ..."
+
+                    if install['type'] and len(install['type'][0]) != 1:
+                        installType = install['type']
+                    else:
+                        installType = [install['type']]
+
+                    if self.checkLib(dependency['name']):
+                        print '--> déjà installé'
+                        return True
+
+                    packageInstallers = ['apt-get install',
+                                         'yum install',
+                                         'emerge',
+                                         'urpmi',
+                                         'zypper install',
+                                         '']
+
+                    for packageInstaller in [y.split(' ')[0] for y in packageInstallers]:
+                        checkRes = getoutput("which " + packageInstaller)
+                        if checkRes and not "no %s" % packageInstaller in checkRes:
+                            break
+                    if packageInstaller:
+                        print "--> votre gestionnaire de paquet est : %s" % packageInstaller
+                    else:
+                        print "--> impossible de déterminer votre gestionnaire de paquet"
+
+                    i = 0
+                    for x in installType:
+                        if i and self.checkLib(dependency['name']):
+                            print '--> déjà installé'
+                            return True
+
+                        target = install['target'][i] if len(installType) > 1 else install['target']
+
+                        if target and len(target[0]) == 1:
+                            target = [target]
+
+                        print ' '.join([x] + target)
+
+                        if x == 'easy_install':
+                            self.eiProcess = subprocess.Popen(['easy_install'] + target, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                            while True:
+                                err = self.eiProcess.stderr.readline().rstrip('\n')
+                                if err:
+                                    print '@', err #TODO couleur rouge ?
+                                out = self.eiProcess.stdout.readline().rstrip('\n')
+                                if out:
+                                    print '#', out #TODO couleur normale
+                                    if "No local packages or download links found" in out:
+                                        print "=> Paquet introuvable via easy_install" #TODO erreur
+                                elif self.eiProcess.poll() != None:
+                                    print '--> fin'
+                                    break
+
+                        if x == 'pip':
+                            self.pipProcess = subprocess.Popen(['pip', 'install'] + target, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                            while True:
+                                err = self.pipProcess.stderr.readline().rstrip('\n')
+                                if err:
+                                    print '@', err #TODO couleur rouge ?
+                                out = self.pipProcess.stdout.readline().rstrip('\n')
+                                if out:
+                                    print '#', out #TODO couleur normale
+                                    if "No distributions at all found" in out:
+                                        print "=> Paquet introuvable via pip" #TODO erreur
+                                elif self.pipProcess.poll() != None:
+                                    print '--> fin'
+                                    break
+
+                        if x == 'apt-get' and x == packageInstaller:
+                            self.agProcess = subprocess.Popen(['apt-get', 'install'] + target, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                            while True:
+                                err = self.agProcess.stderr.readline().rstrip('\n')
+                                if err:
+                                    print '@', err #TODO couleur rouge ?
+                                    if "Impossible de trouver le paquet" in err:
+                                        print "=> Paquet introuvable via apt-get" #TODO erreur
+                                out = self.agProcess.stdout.readline().rstrip('\n')
+                                if out:
+                                    print '#', out #TODO couleur normale
+                                elif self.agProcess.poll() != None:
+                                    print '--> fin'
+                                    break
+
+                        if x == 'yum' and x == packageInstaller:
+                            self.agProcess = subprocess.Popen(['yum', 'install'] + target + ['-y'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                            while True:
+                                err = self.agProcess.stderr.readline().rstrip('\n')
+                                if err:
+                                    print '@', err #TODO couleur rouge ?
+                                    if "Aucun paquet" in err:
+                                        print "=> Paquet introuvable via yum" #TODO erreur
+                                out = self.agProcess.stdout.readline().rstrip('\n')
+                                if out:
+                                    print '#', out #TODO couleur normale
+                                elif self.agProcess.poll() != None:
+                                    print '--> fin'
+                                    break
+                        i += 1
                 else:
                     print "Type d'installation : non précisée"
+                    return False
         else:
             print "Type d'installation : non précisée"
-
-        # pip
-        self.pipProcess = subprocess.Popen(['pip', 'install', 'zdvzdfzegtgev'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        while True:
-            err = self.pipProcess.stderr.readline().rstrip('\n')
-            if err:
-                print '@', err #TODO couleur rouge ?
-            out = self.pipProcess.stdout.readline().rstrip('\n')
-            if out:
-                print '#', out #TODO couleur normale
-                if "No distributions at all found" in out:
-                    print "=> Paquet introuvable via pip" #TODO erreur
-            elif self.pipProcess.poll() != None:
-                break
-
-        # apt-get
-        self.pipProcess = subprocess.Popen(['apt-get', 'install', 'zdvzdfzegtgev'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        while True:
-            err = self.pipProcess.stderr.readline().rstrip('\n')
-            if err:
-                print '@', err #TODO couleur rouge ?
-                if "Impossible de trouver le paquet" in err:
-                    print "=> Paquet introuvable via apt-get" #TODO erreur
-            out = self.pipProcess.stdout.readline().rstrip('\n')
-            if out:
-                print '#', out #TODO couleur normale
-            elif self.pipProcess.poll() != None:
-                break
+            return False
 
     def checkSelection(self, data):
         for checkbtn in self.checkbtns.keys():
