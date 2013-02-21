@@ -94,37 +94,37 @@ class toolbox:
 
 # Recherche de mise à jour
 
-    def checkUpdate(self, param=None):
-        """Vérifie les mises à jourm
-        Parse le site google code pour récupérer la version la plus récente
-        et la compare avec la version actuellement utilisée.
-        """
-        msg=''
-        type_msg=0
-        version = "0.2.3"
-        cnx = httplib2.Http()
-        try: ret = self.requete_http(cnx, "GET", "http://code.google.com/p/initbrain-toolbox/")
-        except: msg,type_msg="Impossible de rechercher les mises à jour :\nla connexion à Google Code a échoué.",1
-        else:
-            res = re.compile('itemprop="description">v(.+) - NOUVEAU NOM : free-knowledge toolbox !</span>', re.MULTILINE).findall(ret)
-            if not res: msg,type_msg="Impossible de rechercher les mises à jour :\nproblème avec la récupération de la version actuelle.",1
-            else:
-                for indice_ver in range(0,3):
-                    if version.split('.')[indice_ver] < res[0].split('.')[indice_ver]:
-                        msg="Une version plus récente est disponible !\n\nVersion utilisée : "+version+"\nVersion actuelle : "+res[0]+"\n\nRendez-vous sur :\nhttp://code.google.com/p/initbrain-toolbox/"
-                        break
-                    elif version.split('.')[indice_ver] > res[0].split('.')[indice_ver]:
-                        msg="Vous disposez d'une prerelease ^^\n\nVersion officielle : "+res[0]+"\nVersion utilisée : "+version
-                        break
-                    elif indice_ver==2: msg="Pas de mises à jour disponibles.\n\nVersion actuelle : "+res[0]
+    # def checkUpdate(self, param=None):
+    #     """Vérifie les mises à jour
+    #     Parse le site google code pour récupérer la version la plus récente
+    #     et la compare avec la version actuellement utilisée.
+    #     """
+    #     msg=''
+    #     type_msg=0
+    #     version = "0.2.3"
+    #     cnx = httplib2.Http()
+    #     try: ret = self.requete_http(cnx, "GET", "http://code.google.com/p/initbrain-toolbox/")
+    #     except: msg,type_msg="Impossible de rechercher les mises à jour :\nla connexion à Google Code a échoué.",1
+    #     else:
+    #         res = re.compile('itemprop="description">v(.+) - NOUVEAU NOM : free-knowledge toolbox !</span>', re.MULTILINE).findall(ret)
+    #         if not res: msg,type_msg="Impossible de rechercher les mises à jour :\nproblème avec la récupération de la version actuelle.",1
+    #         else:
+    #             for indice_ver in range(0,3):
+    #                 if version.split('.')[indice_ver] < res[0].split('.')[indice_ver]:
+    #                     msg="Une version plus récente est disponible !\n\nVersion utilisée : "+version+"\nVersion actuelle : "+res[0]+"\n\nRendez-vous sur :\nhttp://code.google.com/p/initbrain-toolbox/"
+    #                     break
+    #                 elif version.split('.')[indice_ver] > res[0].split('.')[indice_ver]:
+    #                     msg="Vous disposez d'une prerelease ^^\n\nVersion officielle : "+res[0]+"\nVersion utilisée : "+version
+    #                     break
+    #                 elif indice_ver==2: msg="Pas de mises à jour disponibles.\n\nVersion actuelle : "+res[0]
+    #
+    #     # Bloquer la boucle principale juste le temps d'afficher une alerte
+    #     # Exemple : http://aruiz.typepad.com/siliconisland/2006/04/threads_on_pygt.html
+    #     gtk.gdk.threads_enter()
+    #     self.msgbox(msg,type_msg)
+    #     gtk.gdk.threads_leave()
 
-        # Bloquer la boucle principale juste le temps d'afficher une alerte
-        # Exemple : http://aruiz.typepad.com/siliconisland/2006/04/threads_on_pygt.html
-        gtk.gdk.threads_enter()
-        self.msgbox(msg,type_msg)
-        gtk.gdk.threads_leave()
-
-    # Récupérer les interfaces réseaux sans-fil (wireless) actives
+# Récupérer les interfaces réseaux sans-fil (wireless) actives
 
     def getWIface(self):
         res=re.compile("^([\w\d]+).*?IEEE.*?\n", re.MULTILINE).findall(getoutput("iwconfig"))
@@ -155,7 +155,7 @@ class toolbox:
             return infos
         else: return 0
 
-    # Threading
+# Threading
 
     def mkThreadMd5(self, parent):
         """Démarre un thread pour la fonction checkmd5_online"""
@@ -226,7 +226,7 @@ class toolbox:
         """Démarre un thread pour la fonction sumfile"""
         t_sum = thread.start_new_thread(self.sumfile, ())
 
-    # CESAR
+# CESAR
 
     def chiffrement(self, texte, cle, alphabet):
         """Fonction éffectuant un chiffrement César"""
@@ -270,7 +270,7 @@ class toolbox:
             else:
                 cesar=cesar+lettre
 
-        return cesar
+return cesar
 
     def decryptage(self, texte, alphabet):
         """Fonction effectuant une cryptanalyse d'un texte chiffré avec César"""
@@ -355,7 +355,7 @@ class toolbox:
         elif self.btn_radio_dech_inco.get_active():
             txtbuf_sortie.insert(start_iter_sortie, self.decryptage(txt_entree,self.entry_alphabet_cesar.get_text()))
 
-        # SUBSTITUTION MONO-ALPHABETIQUE
+# SUBSTITUTION MONO-ALPHABETIQUE
 
     def checkSubstMonoAlpha(self, widget):
         # Buffer et texte d'entrée
@@ -386,7 +386,7 @@ class toolbox:
             # Écrire en sortie
             txtbuf_sortie_substma.insert(start_iter_sortie_substma, texte_substitue)
 
-        # HASH
+# HASH
 
     def calcHash(self, widget):
         """Permet de calculer le hash coorespondant aux choix que l'utilisateur a exprimé via l'interface graphique
@@ -514,7 +514,7 @@ class toolbox:
                 self.entry_fichier_hash.set_sensitive(True)
                 self.btn_fichier_hash.set_sensitive(True)
 
-            # MD5
+# MD5
 
     def check_kalkulators(self, hash):
         """Parsage du site kalkulators"""
@@ -774,7 +774,7 @@ class toolbox:
         # Réactivation du boutton de validation
         self.btn_checkmd5.set_sensitive(True)
 
-    # REGEX WEB
+# REGEX WEB
 
     def regex_http(self, widget):
         page_web = self.entry_url_wregex.get_text()
@@ -824,7 +824,7 @@ class toolbox:
                 self.label_result_wregex.hide()
                 self.label_result_wregex.show()
 
-            # MAIL
+# MAIL
 
     def envoyer_mail(self,date_envoi_mail):
         # Récupération de l'adresse mail de l'émetteur
@@ -920,7 +920,7 @@ class toolbox:
         # Réactivation du boutton de validation
         self.btn_env_mail.set_sensitive(True)
 
-    # STRINGS
+# STRINGS
 
     def stringsFichier(self, parent):
         #self.entry_strings.set_text(self.dialogueOuvrirStrings())
@@ -957,7 +957,7 @@ class toolbox:
         else:
             self.dialogueOuvrirStrings("")
 
-        # ASM
+# ASM
 
     def asm2human(self, parent):
         app_path = self.entry_bin_asm.get_text().replace(' ','\ ')
@@ -1019,7 +1019,7 @@ class toolbox:
                 self.asm2human("")
         else : self.warnDialog("Veuillez entrer le nom d'une fonction à désassembler")
 
-    # COUCHES RVB
+# COUCHES RVB
 
     def hideMsg(self, widget=None):
         try:
@@ -1062,7 +1062,7 @@ class toolbox:
                         v[j]=2*int(v[j]//2)+int(long_msg_bin[j])
                     elif self.btn_radio_bleu_c_rgb.get_active():
                         b[j]=2*int(b[j]//2)+int(long_msg_bin[j])
-                    # On code la chaine dans les pixels suivants
+                        # On code la chaine dans les pixels suivants
                 for i in range(8*long_msg):
                     if self.btn_radio_rouge_c_rgb.get_active():
                         r[i+8]=2*int(r[i+8]//2)+int(msg_bin[i])
@@ -1070,7 +1070,7 @@ class toolbox:
                         v[i+8]=2*int(v[i+8]//2)+int(msg_bin[i])
                     elif self.btn_radio_bleu_c_rgb.get_active():
                         b[i+8]=2*int(b[i+8]//2)+int(msg_bin[i])
-                    # On recrée l'image rouge
+                        # On recrée l'image rouge
                 if self.btn_radio_rouge_c_rgb.get_active():
                     nr = Image.new("L",(w,h))
                     nr.putdata(r)
@@ -1305,7 +1305,7 @@ class toolbox:
                 txtbuf_texte_c_rgb.delete(start_iter_texte_c_rgb, end_iter_texte_c_rgb)
                 txtbuf_texte_c_rgb.insert(start_iter_texte_c_rgb, self.result_read_stega['b'])
 
-            # NOT
+# NOT
 
     def opNot(self, file_path):
         self.btn_img_op_not.set_sensitive(False)
@@ -1366,7 +1366,7 @@ class toolbox:
         dialogue.destroy()
         if sortie: os.system("cp \"%s/tmp/result_opnot\" \"" % FKTB_PATH + sortie + "\"")
 
-    # XOR
+# XOR
 
     def xor(self, widget):
         # Buffer et texte d'entrée
@@ -1437,7 +1437,7 @@ class toolbox:
                     else:
                         txtbuf_sortie_xor.insert(start_iter_sortie_xor, ''.join(data).rstrip(' '))
 
-                    # VIGENERE
+# VIGENERE
 
     def vigenere(self, widget, mode):
         """Chiffre de Vigenère"""
@@ -1491,7 +1491,7 @@ class toolbox:
             i=i+1
         txtbuf_sortie_vigenere.insert(start_iter_sortie_vigenere, str_crypted)
 
-    # AUTRES
+# AUTRES
 
     def runAsRoot(self, parent, module):
         for su_gui_cmd in ['gksu','kdesu','ktsuss','beesu','gnome-terminal','xterm','']:
@@ -1514,7 +1514,7 @@ class toolbox:
             head, ret = cnx.request(url, method.upper(), urlencode(data), headers = headers)
         return ret
 
-    # Interface graphique :
+# Interface graphique :
 
     def quitDialog(self, widget, data):
         if self.yesnoDialog("Voulez-vous vraiment quitter\nla Free-knowledge Toolbox ?"): delete()
@@ -2040,12 +2040,12 @@ class toolbox:
         boite3_accueil.pack_start(boite4_accueil, False, False, 0)
         boite4_accueil.show()
 
-        # btn_check_update
-        btn_check_update = gtk.Button("Vérifier les mises à jour")
-        btn_check_update.set_size_request(int(btn_check_update.size_request()[0]*1.1),btn_check_update.size_request()[1])
-        boite4_accueil.pack_end(btn_check_update, False, False, 0)
-        btn_check_update.connect("clicked", lambda e: thread.start_new_thread(self.checkUpdate, ()))
-        btn_check_update.show()
+        # # btn_check_update
+        # btn_check_update = gtk.Button("Vérifier les mises à jour")
+        # btn_check_update.set_size_request(int(btn_check_update.size_request()[0]*1.1),btn_check_update.size_request()[1])
+        # boite4_accueil.pack_end(btn_check_update, False, False, 0)
+        # btn_check_update.connect("clicked", lambda e: thread.start_new_thread(self.checkUpdate, ()))
+        # btn_check_update.show()
 
         # On crée une boîte à évènement et on l'ajoute à la fenêtre principale
         boite_evenement_april = gtk.EventBox()
@@ -4607,8 +4607,8 @@ class toolbox:
         for category in data.keys():
             # print re.sub(' |-|\'|/', '_', unicodedata.normalize('NFKD', unicode(category)).encode('ascii', 'ignore').lower())
             if type(data[category]) == type(list()) and len(data[category]) >= 1:
-                # for module in data[category]:
-                    # print re.sub(' |-|\'|/', '_', unicodedata.normalize('NFKD', unicode(module['name'])).encode('ascii', 'ignore').lower())
+            # for module in data[category]:
+            # print re.sub(' |-|\'|/', '_', unicodedata.normalize('NFKD', unicode(module['name'])).encode('ascii', 'ignore').lower())
                 parent = self.treestore_menu.append(None, [category])
                 [self.treestore_menu.append(parent, [module['name']]) for module in data[category]]
 
