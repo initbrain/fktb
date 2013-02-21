@@ -2,7 +2,7 @@ FREE-KNOWLEDGE TOOLBOX
 GNU General Public License v3.0 - http://www.gnu.org/licenses/gpl-3.0.txt
 
 Installation ($: user, #: root):
-	# apt-get install git, python-setuptools
+	# apt-get install git python-setuptools
 	$ git clone https://github.com/initbrain/fktb.git
 	$ cd fktb/
 	# python setup.py install
