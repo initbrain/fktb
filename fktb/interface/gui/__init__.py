@@ -269,8 +269,7 @@ class toolbox:
                 cesar=cesar+alphabet[position].upper()
             else:
                 cesar=cesar+lettre
-
-return cesar
+        return cesar
 
     def decryptage(self, texte, alphabet):
         """Fonction effectuant une cryptanalyse d'un texte chiffré avec César"""
