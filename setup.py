@@ -38,22 +38,22 @@ setup(
     install_requires=REQUIREMENTS,
     entry_points={
         'console_scripts': [
+            'fktb_bootstrap = fktb.interface.install:main',
             'fktb = fktb.interface.gui:main'
-            #'fktb-cli = fktb.cli:main'
+            #'fktb-cli = fktb.interface.cli:main'
         ]
     },
     data_files=[
         ('fktb/images/', ['fktb/images/icone.png',
-                          'fktb/images/logo_gpl_v3.png',
-                          'fktb/images/logo_april.png',
-                          'fktb/images/logo_zbar.png',
-                          'fktb/images/white_hat.svg',
-                          'fktb/images/a_propos.png',
-                          'fktb/images/attente.gif',
-                          'fktb/images/enregistrer.png',
-                          'fktb/core/modules.json'])
+                    'fktb/images/logo_gpl_v3.png',
+                    'fktb/images/logo_april.png',
+                    'fktb/images/logo_zbar.png',
+                    'fktb/images/white_hat.svg',
+                    'fktb/images/a_propos.png',
+                    'fktb/images/attente.gif',
+                    'fktb/images/enregistrer.png']),
+        ('fktb/core/', ['fktb/core/modules.json'])
     ]
 )
 
-from fktb.interface.gui.install import main
-main()
+os.system('fktb_bootstrap')
