@@ -83,6 +83,9 @@ if import_error != "":
     print "Il est nécessaire de posséder les librairies suivantes pour faire fonctionner cette boîte à outils :" + import_error
     raise SystemExit
 
+# Import modules
+from fktb.lib.network import wifi
+
 # Configurations
 
 from fktb.core.constants import FKTB_PATH, CONFIG_PATH
@@ -3825,77 +3828,6 @@ class toolbox:
         # Affichage
         self.bloc_tabs.insert_page(boite1_hostname, gtk.Label("Hostname Resolver"), -1)
 
-    def wifiView(self):
-        iface=self.combo_iface_wifi.get_active_text().split()[0]
-
-        if self.enCoursWifi:
-            self.enCoursWifi=0
-            self.btn_wifi.set_label("Start")
-        elif not getoutput("which iw"):
-            os_info=getoutput("uname -a").lower()
-            alert="Un outils est nécessaire, veuillez l'installer :\niw - tool for configuring Linux wireless devices"
-            alert+=''.join(["\n\n# apt-get install iw" for os in "backtrack","debian","ubuntu","mint","voyager" if os in os_info and not "apt-get" in alert])
-            alert+=''.join(["\n\n# yum install iw\n(à vérifier)" for os in "fedora","centos" if os in os_info and not "yum" in alert])
-            gtk.gdk.threads_enter()
-            self.msgbox(alert,1)
-            gtk.gdk.threads_leave()
-        elif "(-19)" in getoutput("iw "+iface+" info"):
-            gtk.gdk.threads_enter()
-            self.btn_wifi.set_label("Start")
-            self.msgbox("Veuillez sélectionner une interface Wi-Fi !",1)
-            gtk.gdk.threads_leave()
-            self.enCoursWifi=0
-        else:
-            # Vérification des permissions
-            for su_gui_cmd in ['gksu','kdesu','ktsuss','beesu','']:
-                if getoutput("which "+su_gui_cmd): break
-            if not su_gui_cmd:
-                gtk.gdk.threads_enter()
-                self.msgbox("Un des outils suivant est nécessaire pour acquérir les droits administrateur, veuillez en installer un :\n\ngksu\nkdesu\nktsuss\nbeesu",1)
-                gtk.gdk.threads_leave()
-            else:
-                self.enCoursWifi=1
-                thread.start_new_thread(self.runProgressbarWifi, ())
-                self.btn_wifi.set_label("Stop")
-                self.progressbarWifi.set_text("Scan en cours ...")
-
-                rssiMin=-120
-                rssiMax=-30
-                while self.enCoursWifi and su_gui_cmd:
-                    iwOut=getoutput(su_gui_cmd+" iw dev "+iface+" scan")
-
-                    if not iwOut:
-                        continue
-                    if "(-1)" in iwOut:
-                        gtk.gdk.threads_enter()
-                        self.btn_wifi.set_label("Start")
-                        self.msgbox("Nécessite d'être lancé en tant qu'administrateur !",1)
-                        gtk.gdk.threads_leave()
-                        self.enCoursWifi=0
-                    elif "(-100)" in iwOut:
-                        gtk.gdk.threads_enter()
-                        self.btn_wifi.set_label("Start")
-                        self.msgbox("L'interface Wi-Fi séléctionnée est désactivée !",1)
-                        gtk.gdk.threads_leave()
-                        self.enCoursWifi=0
-                    else:
-                        res = re.compile('BSS ([\w\d\:]+).*\n.*\n.*\n.*\n.*\n\tsignal: ([-\.\d]+) dBm\n\tlast seen: (\d+) ms ago\n\tSSID: (.*)\n', re.MULTILINE).findall(iwOut)
-                        if len(res)!=len(re.compile('signal: ([-\.\d]+ dBm)\n', re.MULTILINE).findall(iwOut)): print "Problème !"
-
-                        for x in res:
-                            found=0
-                            apIter=self.liststore_wifi.get_iter_first() # None quand liststore vide
-                            while apIter:
-                                if self.liststore_wifi.get_value(apIter, 1) == x[0]:
-                                    self.liststore_wifi.set(apIter, 2, x[1], 3, int((float(x[1])-rssiMin))*100/(rssiMax-rssiMin)) # Modifier une ligne
-                                    if int(x[2])>5000: self.liststore_wifi.set(apIter, 2, '', 3, 0) # Modifier une ligne
-                                    found=1
-                                apIter=self.liststore_wifi.iter_next(apIter)
-                            else:
-                                if not found:
-                                    self.liststore_wifi.append([x[3],x[0],x[1],int((float(x[1])-rssiMin))*100/(rssiMax-rssiMin)])
-                                    print int((float(x[1])-rssiMin))*100/(rssiMax-rssiMin)
-
     def tabWifi(self): # TAB Wi-Fi
     # boites
         boite1_wifi = gtk.VBox(False, 5)
@@ -3942,7 +3874,7 @@ class toolbox:
         self.btn_wifi = gtk.Button("Start")
         self.btn_wifi.set_size_request(int(self.btn_wifi.size_request()[0]*1.1),self.btn_wifi.size_request()[1])
         boite2_wifi.pack_start(self.btn_wifi, False, False, 0)
-        self.btn_wifi.connect("clicked", lambda e: thread.start_new_thread(self.wifiView, ()))
+        self.btn_wifi.connect("clicked", lambda e: thread.start_new_thread(wifi.wifiView, (self,)))
         self.btn_wifi.show()
 
         self.enCoursWifi=0

@@ -46,11 +46,16 @@ from fktb.core.constants import FKTB_PATH, CONFIG_PATH
 
 
 class install():
-    def quitDialog(self, widget, data):
-        if self.yesnoDialog("Voulez-vous vraiment quitter\nla Free-knowledge Toolbox ?"):
+    def quitDialog(self, widget, data, event=None):
+        if widget == self.btn_modules:
+            self.checkSelection(data)
+            self.msgbox("Lancez la boîte à outils\navec la commande :\nfktb", 0)
             exit()
         else:
-            return 1
+            if self.yesnoDialog("Voulez-vous vraiment quitter\nl'assistant d'installation ?"):
+                exit()
+            else:
+                return 1
 
     def yesnoDialog(self, message):
         # Creation de la boite de message
@@ -70,16 +75,36 @@ class install():
         elif reponse == gtk.RESPONSE_NO:
             return 0
 
-    def checkLib(self, lib):
-        try:
-            inspect.getfile(__import__(lib))
-        except ImportError:
-            return False
-        else:
-            return True
+    def msgbox(self, message, type_msg=0):
+        about = gtk.MessageDialog(self.fenetre,
+                                  gtk.DIALOG_MODAL,
+                                  gtk.MESSAGE_WARNING if type_msg else gtk.MESSAGE_INFO,
+                                  gtk.BUTTONS_OK,
+                                  message)
+        about.run() # Affichage de la boite de message
+        about.destroy() # Destruction de la boite de message
 
-    def libInfos(self, widget, dependency):
-        print "\nLibrairie : %s" % dependency['name']
+    def checkDep(self, lib, type):
+        if type == 'cmd':
+            try:
+                checkRes = getoutput("which " + lib)
+            except ImportError:
+                return False
+            else:
+                if checkRes and not "no %s" % lib in checkRes:
+                    return True
+                else:
+                    return False
+        elif type == 'lib':
+            try:
+                inspect.getfile(__import__(lib))
+            except ImportError:
+                return False
+            else:
+                return True
+
+    def installDep(self, widget, dependency, data):
+        print "\nDépendance : %s" % dependency['name']
         if dependency.has_key('homepage'):
             for homepage in dependency['homepage']:
                 print "Site web : %s" % (homepage if homepage else "non précisé")
@@ -109,8 +134,13 @@ class install():
                     else:
                         installType = [install['type']]
 
-                    if self.checkLib(dependency['name']):
+                    if self.checkDep(dependency['name'], dependency['type']):
+                        for key in self.btns.keys():
+                            if dependency['name'] in key:
+                                self.btns[key].child.set_text(dependency['name'])
+                                self.btns[key].child.set_use_markup(False)
                         print '--> déjà installé'
+                        self.msgbox("%s est déjà installé" % dependency['name'], 0)
                         return True
 
                     packageInstallers = ['apt-get install',
@@ -128,22 +158,21 @@ class install():
                         print "--> votre gestionnaire de paquet est : %s" % packageInstaller
                     else:
                         print "--> impossible de déterminer votre gestionnaire de paquet"
+                        self.msgbox("Impossible de déterminer\nvotre gestionnaire de paquet", 1)
 
                     i = 0
                     for x in installType:
-                        if i and self.checkLib(dependency['name']):
-                            print '--> déjà installé'
-                            return True
-
                         target = install['target'][i] if len(installType) > 1 else install['target']
 
                         if target and len(target[0]) == 1:
                             target = [target]
 
-                        print ' '.join([x] + target)
+                        print "\nInstallation de '%s' (%s)" % (' '.join(target), x)
 
                         if x == 'easy_install':
-                            self.eiProcess = subprocess.Popen(['easy_install'] + target, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                            cmd = ['easy_install'] + target
+                            print "[+] %s" % ' '.join(cmd)
+                            self.eiProcess = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                             while True:
                                 err = self.eiProcess.stderr.readline().rstrip('\n')
                                 if err:
@@ -154,64 +183,104 @@ class install():
                                     if "No local packages or download links found" in out:
                                         print "=> Paquet introuvable via easy_install" #TODO erreur
                                 elif self.eiProcess.poll() != None:
-                                    print '--> fin'
                                     break
 
                         if x == 'pip':
-                            self.pipProcess = subprocess.Popen(['pip', 'install'] + target, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                            while True:
-                                err = self.pipProcess.stderr.readline().rstrip('\n')
-                                if err:
-                                    print '@', err #TODO couleur rouge ?
-                                out = self.pipProcess.stdout.readline().rstrip('\n')
-                                if out:
-                                    print '#', out #TODO couleur normale
-                                    if "No distributions at all found" in out:
-                                        print "=> Paquet introuvable via pip" #TODO erreur
-                                elif self.pipProcess.poll() != None:
-                                    print '--> fin'
+                            packageInstallers = [
+                                'pip',
+                                'pip-python',
+                                ''
+                            ]
+                            for packageInstaller in [y.split(' ')[0] for y in packageInstallers]:
+                                checkRes = getoutput("which " + packageInstaller)
+                                if checkRes and not "no %s" % packageInstaller in checkRes:
                                     break
 
+                            if not packageInstaller:
+                                print "--> impossible de déterminer votre alias pip"
+                                self.msgbox("Impossible de déterminer votre alias pip", 1)
+                            else:
+                                print "--> votre alias pip est : %s" % packageInstaller
+
+                                cmd = [packageInstaller, 'install'] + target
+                                print "[+] %s" % ' '.join(cmd)
+                                self.pipProcess = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                                while True:
+                                    err = self.pipProcess.stderr.readline().rstrip('\n')
+                                    if err:
+                                        print '@', err #TODO couleur rouge ?
+                                    out = self.pipProcess.stdout.readline().rstrip('\n')
+                                    if out:
+                                        print '#', out #TODO couleur normale
+                                        if "No distributions at all found" in out:
+                                            print "=> Paquet introuvable via pip"
+                                            self.msgbox("Paquet introuvable via pip", 1)
+                                    elif self.pipProcess.poll() != None:
+                                        break
+
                         if x == 'apt-get' and x == packageInstaller:
-                            self.agProcess = subprocess.Popen(['apt-get', 'install'] + target, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                            cmd = ['apt-get', 'install', '-y'] + target
+                            print "[+] %s" % ' '.join(cmd)
+                            self.agProcess = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                             while True:
                                 err = self.agProcess.stderr.readline().rstrip('\n')
                                 if err:
                                     print '@', err #TODO couleur rouge ?
                                     if "Impossible de trouver le paquet" in err:
-                                        print "=> Paquet introuvable via apt-get" #TODO erreur
+                                        print "=> Paquet introuvable via apt-get"
+                                        self.msgbox("Paquet introuvable via apt-get", 1)
                                 out = self.agProcess.stdout.readline().rstrip('\n')
                                 if out:
                                     print '#', out #TODO couleur normale
                                 elif self.agProcess.poll() != None:
-                                    print '--> fin'
                                     break
 
                         if x == 'yum' and x == packageInstaller:
-                            self.agProcess = subprocess.Popen(['yum', 'install'] + target + ['-y'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                            cmd = ['yum', 'install', '-y'] + target
+                            print "[+] %s" % ' '.join(cmd)
+                            self.agProcess = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                             while True:
                                 err = self.agProcess.stderr.readline().rstrip('\n')
                                 if err:
                                     print '@', err #TODO couleur rouge ?
                                     if "Aucun paquet" in err:
-                                        print "=> Paquet introuvable via yum" #TODO erreur
+                                        print "=> Paquet introuvable via yum"
+                                        self.msgbox("Paquet introuvable via yum", 1)
                                 out = self.agProcess.stdout.readline().rstrip('\n')
                                 if out:
                                     print '#', out #TODO couleur normale
                                 elif self.agProcess.poll() != None:
-                                    print '--> fin'
                                     break
-                        i += 1
+
+                        if self.checkDep(dependency['name'], dependency['type']):
+                            missingDep = 0
+                            for key in self.btns.keys():
+                                if dependency['name'] in key:
+                                    self.btns[key].child.set_text(dependency['name'])
+                                    self.btns[key].child.set_use_markup(False)
+                                elif self.btns[key].child.get_use_markup():
+                                    missingDep += 1
+                            if not missingDep:
+                                self.progressbar_modules.set_text("rien à installer, vous pouvez continuer")
+                                self.btn_modules.set_sensitive(True)
+                            else:
+                                self.progressbar_modules.set_text("%d dépendance%s à installer" % (missingDep, 's' if missingDep > 1 else ''))
+                            print '--> installé'
+                            self.msgbox("%s installé" % dependency['name'], 0)
+                            return True
+                        else:
+                            i += 1
                 else:
-                    print "Type d'installation : non précisée"
+                    print "Type d'installation non précisée"
+                    self.msgbox("Type d'installation non précisée", 1)
                     return False
         else:
             print "Type d'installation : non précisée"
+            self.msgbox("Type d'installation non précisée", 1)
             return False
 
     def checkSelection(self, data):
         for checkbtn in self.checkbtns.keys():
-            #TODO read modules.json & generate ./fktb in ~
             for category in data.keys():
                 # print category
                 i=0
@@ -232,7 +301,6 @@ class install():
             print "Erreur : %s" % err
         else:
             print "Création du fichier : %s" % modules_path
-        exit()
 
     def __init__(self):
         self.fenetre = gtk.Window(gtk.WINDOW_TOPLEVEL)
@@ -290,6 +358,15 @@ class install():
         self.boite_site_modules.pack_start(self.boite_col1_modules, True, True, 0)
         self.boite_col1_modules.show()
 
+        self.boite2_modules = gtk.HBox(False, 5)
+        self.boite_modules.pack_start(self.boite2_modules, False, False, 5)
+        self.boite2_modules.show()
+
+        # self.progressbar_modules
+        self.progressbar_modules = gtk.ProgressBar()
+        self.boite2_modules.pack_start(self.progressbar_modules, True, True, 0)
+        self.progressbar_modules.show()
+
         json_data=open('%s/core/modules.json' % FKTB_PATH)
         data = simplejson.load(json_data)
         json_data.close()
@@ -303,6 +380,7 @@ class install():
         #                 print "dependance : %s" % dependance['name']
 
         i = 0
+        missingDep = 0
         self.expanders = dict()
         self.vboxs = dict()
         self.hboxs = dict()
@@ -333,31 +411,29 @@ class install():
                         self.vboxs[category].pack_start(self.hboxs['%s - %s' % (dependency['name'], module['name'])], fill=False)
                         self.hboxs['%s - %s' % (dependency['name'], module['name'])].show()
 
-                        if self.checkLib(dependency['name']):
-                            self.btns['%s - %s' % (dependency['name'], module['name'])] = gtk.Button('<i><span foreground="green">%s</span></i>' % dependency['name'])
+                        if self.checkDep(dependency['name'], dependency['type']):
+                            self.btns['%s - %s' % (dependency['name'], module['name'])] = gtk.Button(dependency['name'])
                         else:
                             self.btns['%s - %s' % (dependency['name'], module['name'])] = gtk.Button('<i><span foreground="red">%s</span></i>' % dependency['name'])
+                            self.btns['%s - %s' % (dependency['name'], module['name'])].child.set_use_markup(True)
+                            missingDep += 1
 
-                        self.btns['%s - %s' % (dependency['name'], module['name'])].child.set_use_markup(True)
                         self.btns['%s - %s' % (dependency['name'], module['name'])].set_size_request(int(self.btns['%s - %s' % (dependency['name'], module['name'])].size_request()[0]*1.2),self.btns['%s - %s' % (dependency['name'], module['name'])].size_request()[1])
-                        self.btns['%s - %s' % (dependency['name'], module['name'])].connect("clicked", self.libInfos, dependency)
+                        self.btns['%s - %s' % (dependency['name'], module['name'])].connect("clicked", self.installDep, dependency, data)
 
                         self.hboxs['%s - %s' % (dependency['name'], module['name'])].pack_start(self.btns['%s - %s' % (dependency['name'], module['name'])], False, False, 0)
                         self.btns['%s - %s' % (dependency['name'], module['name'])].show()
 
-        self.boite2_modules = gtk.HBox(False, 5)
-        self.boite_modules.pack_start(self.boite2_modules, False, False, 5)
-        self.boite2_modules.show()
-
-        # self.progressbar_modules
-        self.progressbar_modules = gtk.ProgressBar()
-        self.boite2_modules.pack_start(self.progressbar_modules, True, True, 0)
-        self.progressbar_modules.show()
+        if missingDep:
+            self.btn_modules.set_sensitive(False)
+            self.progressbar_modules.set_text("%d dépendance%s à installer" % (missingDep, 's' if missingDep > 1 else ''))
+        else:
+            self.progressbar_modules.set_text("rien à installer, vous pouvez continuer")
 
         # self.self.btn_modules
         self.btn_modules = gtk.Button("ok")
         self.btn_modules.set_size_request(int(self.btn_modules.size_request()[0]*1.2),self.btn_modules.size_request()[1])
-        self.btn_modules.connect("clicked", lambda e: self.checkSelection(data))
+        self.btn_modules.connect("clicked", self.quitDialog, data)
         self.boite2_modules.pack_start(self.btn_modules, False, False, 0)
         self.btn_modules.show()
 
@@ -379,6 +455,8 @@ class install():
         gtk.main()
 
 def main():
-    # Exécution
     print "\nLancement de l'assistant d'installation ..."
     install()
+
+if __name__ == "__main__":
+    main()
