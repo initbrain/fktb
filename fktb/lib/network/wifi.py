@@ -6,6 +6,7 @@ def wifiView(self):
     import re
     import gtk
     import thread
+    from time import sleep
 
     iface=self.combo_iface_wifi.get_active_text().split()[0]
 
@@ -55,3 +56,4 @@ def wifiView(self):
                     else:
                         if not found:
                             self.liststore_wifi.append([x[2],x[0],x[1],int((float(x[1])-rssiMin))*100/(rssiMax-rssiMin)])
+            sleep(1)
