@@ -8,7 +8,7 @@ free-knowledge toolbox
 
 *   **Screenshot:**
 
-    ![free-knowledge toolbox](https://raw.github.com/initbrain/fktb/master/fktb/images/screenshot.png)
+    ![free-knowledge toolbox](https://raw.github.com/initbrain/fktb/master/fktb/images/screenshot_accueil.png)
 
 
 *   **Installation ($: user, #: root):**
