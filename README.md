@@ -3,7 +3,7 @@
 
 ---
 
-free-knowledge toolbox
+Free-knowledge Toolbox
 =================
 
 *   **Screenshot:**
