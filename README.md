@@ -1,4 +1,6 @@
 ---
+![![GNU General Public License v3.0](http://www.gnu.org/licenses/gpl-3.0.txt)](https://raw.github.com/initbrain/fktb/master/fktb/images/logo_gpl_v3.png)
+
 [GNU General Public License v3.0](http://www.gnu.org/licenses/gpl-3.0.txt)
 
 ---
@@ -13,7 +15,7 @@ Free-knowledge Toolbox
 
 *   **Installation ($: user, #: root):**
 
-    We have developed our own installer.
+    We have included our own installation wizard.
     It require the installation of the following dependencies:
 
         # apt-get install git python-setuptools
