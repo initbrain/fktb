@@ -424,18 +424,18 @@ class install():
                         self.hboxs['%s - %s' % (dependency['name'], module['name'])].pack_start(self.btns['%s - %s' % (dependency['name'], module['name'])], False, False, 0)
                         self.btns['%s - %s' % (dependency['name'], module['name'])].show()
 
-        if missingDep:
-            self.btn_modules.set_sensitive(False)
-            self.progressbar_modules.set_text("%d dépendance%s à installer" % (missingDep, 's' if missingDep > 1 else ''))
-        else:
-            self.progressbar_modules.set_text("rien à installer, vous pouvez continuer")
-
         # self.self.btn_modules
         self.btn_modules = gtk.Button("ok")
         self.btn_modules.set_size_request(int(self.btn_modules.size_request()[0]*1.2),self.btn_modules.size_request()[1])
         self.btn_modules.connect("clicked", self.quitDialog, data)
         self.boite2_modules.pack_start(self.btn_modules, False, False, 0)
         self.btn_modules.show()
+
+        if missingDep:
+            self.btn_modules.set_sensitive(False)
+            self.progressbar_modules.set_text("%d dépendance%s à installer" % (missingDep, 's' if missingDep > 1 else ''))
+        else:
+            self.progressbar_modules.set_text("rien à installer, vous pouvez continuer")
 
         # self.separateur_modules
         self.separateur_modules = gtk.HSeparator()
