@@ -40,20 +40,31 @@ def wifiView(self):
                 self.enCoursWifi=0
             else:
                 # BSS ([\w\d\:]+)(?:.*\n)+?\tsignal: ([-\.\d]+) dBm\n\tlast seen: (\d+) ms ago\n\tSSID: (.*)\n
-                res = re.compile('Address: ([\w\d\:]+)(?:.*\n)+?\s*Quality=[\d/]*\s*Signal level=([-\.\d]+) dBm\s*\n.*\n\s*ESSID:"(.*)"', re.MULTILINE).findall(iwOut)
+                res = re.compile('Address: ([\w\d\:]+)(?:.*\n)+?\s*Quality=[\d/]*\s*Signal level=([-\.\d]+) dBm\s*\n.*\n\s*ESSID:"(.*?)"(?:(?:.*\n)+?.*Last beacon: (\d+)ms ago)?', re.MULTILINE).findall(iwOut)
                 if len(res)!=len(re.compile('Signal level=([-\.\d]+) dBm', re.MULTILINE).findall(iwOut)):
                     print "Problème !"
 
+                # print res
                 for x in res:
                     found=0
                     apIter=self.liststore_wifi.get_iter_first() # None quand liststore vide
                     while apIter:
                         if self.liststore_wifi.get_value(apIter, 1) == x[0]:
-                            self.liststore_wifi.set(apIter, 2, x[1], 3, int((float(x[1])-rssiMin))*100/(rssiMax-rssiMin)) # Modifier une ligne
-                            # if int(x[2])>5000: self.liststore_wifi.set(apIter, 2, '', 3, 0) # Modifier une ligne
+                            percent = int((float(x[1])-rssiMin))*100/(rssiMax-rssiMin)
+                            if percent > 100:
+                                percent = 100
+                            self.liststore_wifi.set(apIter, 2, x[1], 3, percent) # Modifier une ligne
+                            #TODO set at 0% if ap disappear from scan results
+                            # if x[3] and int(x[3]) > 5000:
+                            #     self.liststore_wifi.set(apIter, 2, '', 3, 0) # Modifier une ligne
+                            #TODO try to find constructor via mac
+                            #TODO show encryption
                             found=1
                         apIter=self.liststore_wifi.iter_next(apIter)
                     else:
                         if not found:
-                            self.liststore_wifi.append([x[2],x[0],x[1],int((float(x[1])-rssiMin))*100/(rssiMax-rssiMin)])
+                            percent = int((float(x[1])-rssiMin))*100/(rssiMax-rssiMin)
+                            if percent > 100:
+                                percent = 100
+                            self.liststore_wifi.append([x[2],x[0],x[1],percent])
             sleep(1)
